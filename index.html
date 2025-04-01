@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SONGHEEDY | Mobile Mask Fix</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://webfontworld.github.io/SCoreDream/SCoreDream.css" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: 'SCoreDream', sans-serif;
+    }
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .video-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      width: 100vw;
+      max-width: 100%;
+      height: 56.25vw;
+      max-height: 100vh;
+      transition: transform 0.4s ease, opacity 0.8s ease, top 0.4s ease;
+      -webkit-mask-image: url(#mask-text);
+      mask-image: url(#mask-text);
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .mask-svg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .mask-svg text {
+      fill: white;
+      font-size: min(12vw, 70px);
+      font-weight: 900;
+      dominant-baseline: middle;
+      opacity: 1;
+      transform: translateY(0px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .mask-gone .video-container {
+      -webkit-mask-image: none;
+      mask-image: none;
+      max-width: 100vw;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      transform: scale(1.1);
+    }
+    .fade-video { opacity: 1; }
+    .fade-out { opacity: 0; }
+    section {
+      padding: 6rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <svg class="mask-svg">
+      <defs>
+        <mask id="mask-text" x="0" y="0" width="100%" height="100%">
+          <rect width="100%" height="100%" fill="black" />
+          <text id="maskText" x="50%" y="50%" text-anchor="middle">SONGHEEDY</text>
+        </mask>
+      </defs>
+    </svg>
+    <div class="video-container fade-video" id="videoContainer">
+      <iframe
+        src="https://www.youtube.com/embed/sC0ZEBffivE?autoplay=1&mute=1&loop=1&playlist=sC0ZEBffivE"
+        allow="autoplay; fullscreen"
+        allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div style="height: 130vh;"></div>
+
+  <section id="about">
+    <div class="section-title">About</div>
+    <p>영상 디렉팅, 촬영, 편집, 모션그래픽까지 직접 다루는 크리에이터 송히디입니다.</p>
+  </section>
+
+  <section id="contact">
+    <div class="section-title">Contact</div>
+    <p>📧 songheedy@email.com</p>
+    <p>📱 Instagram @songheedy</p>
+  </section>
+
+  <script>
+    const videoContainer = document.getElementById('videoContainer');
+    const text = document.getElementById('maskText');
+    const body = document.body;
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      const maxY = 300;
+      const maxFade = 800;
+      const scale = 1 + Math.min(y / 1000, 0.2);
+      videoContainer.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      const opacity = Math.max(1 - y / maxY, 0);
+      const translateY = Math.min(y / 2, 100);
+      text.setAttribute("opacity", opacity.toString());
+      text.setAttribute("transform", `translate(0, ${translateY})`);
+      if (y > maxY) body.classList.add('mask-gone'); else body.classList.remove('mask-gone');
+      if (y > maxFade) videoContainer.classList.add('fade-out'); else videoContainer.classList.remove('fade-out');
+    });
+  </script>
+</body>
+</html>
